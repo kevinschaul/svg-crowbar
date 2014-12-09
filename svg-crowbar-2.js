@@ -217,7 +217,11 @@
       for (i=0, len=cSSStyleDeclarationComputed.length; i<len; i++) {
         key=cSSStyleDeclarationComputed[i];
         value=cSSStyleDeclarationComputed.getPropertyValue(key);
-        if (value!==emptySvgDeclarationComputed.getPropertyValue(key) && key != 'font-family') {
+        if (value!==emptySvgDeclarationComputed.getPropertyValue(key)) {
+          if (key == 'font-family') {
+            // Get the first font attribute
+            value = getSVGFontName(value.split(',')[0]);
+          }
           computedStyleStr+=key+":"+value+";";
         }
       }
@@ -249,5 +253,13 @@
     }
   }
 
+  function getSVGFontName(name) {
+    // Maps between web CSS and regular font names
+    return {
+      'FranklinITCProBold': 'FranklinITCStd-Bold',
+      'FranklinITCProLight': 'FranklinITCStd-Light',
+      'FranklinITCProThin': 'FranklinITCStd-Thin',
+    }[name] || name;
+  }
 
 })();
